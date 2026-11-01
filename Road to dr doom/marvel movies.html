@@ -1,0 +1,419 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Road Map to Dr Doomsday</title><style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #090909;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background: linear-gradient(135deg, #8b0000, #ed001f);
+    padding: 35px 15px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 35px;
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+header p {
+    color: #eee;
+}
+
+.container {
+    max-width: 950px;
+    margin: auto;
+    padding: 20px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 25px 0;
+}
+
+.card {
+    background: #1c1c1c;
+    padding: 18px 8px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.card h2 {
+    color: #ff263f;
+    margin: 5px;
+}
+
+.card p {
+    font-size: 13px;
+    color: #aaa;
+}
+
+.progress {
+    height: 12px;
+    background: #292929;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+#progressBar {
+    height: 100%;
+    width: 0%;
+    background: #ed001f;
+    transition: 0.4s;
+}
+
+#search {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background: #1c1c1c;
+    color: white;
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+button {
+    background: #252525;
+    color: white;
+    border: none;
+    padding: 11px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button.active,
+button:hover {
+    background: #d00020;
+}
+
+.movie {
+    background: #191919;
+    padding: 15px;
+    margin-bottom: 9px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-left: 3px solid #d00020;
+}
+
+.movie input {
+    width: 19px;
+    height: 19px;
+    accent-color: red;
+    cursor: pointer;
+}
+
+.movie span {
+    flex: 1;
+    font-size: 15px;
+}
+
+.watched span {
+    text-decoration: line-through;
+    color: #777;
+}
+
+.movie small {
+    color: #888;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+
+@media(max-width:600px) {
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    header h1 {
+        font-size: 25px;
+    }
+}
+</style></head><body><header>
+    <h1>MARVEL WATCHLIST</h1>
+    <p>Every Movie. Every Hero. One Journey.</p>
+</header><div class="container"><h2>My Movie Collection 🎬</h2>
+
+<div class="stats">
+
+    <div class="card">
+        <h2 id="total">0</h2>
+        <p>Total Movies</p>
+    </div>
+
+    <div class="card">
+        <h2 id="watched">0</h2>
+        <p>Watched</p>
+    </div>
+
+    <div class="card">
+        <h2 id="remaining">0</h2>
+        <p>Remaining</p>
+    </div>
+
+    <div class="card">
+        <h2 id="percentage">0%</h2>
+        <p>Completed</p>
+    </div>
+
+</div>
+
+<div class="progress">
+    <div id="progressBar"></div>
+</div>
+
+<input
+    type="text"
+    id="search"
+    placeholder="🔍 Search Marvel Movies..."
+>
+
+<div class="filters">
+    <button class="active" onclick="setFilter('all',this)">All Movies</button>
+    <button onclick="setFilter('watched',this)">Watched</button>
+    <button onclick="setFilter('unwatched',this)">Unwatched</button>
+</div>
+
+<div id="movieList"></div>
+
+</div><footer>
+    MARVEL MOVIE UNIVERSE
+    <p>Created for Marvel Fans ❤️</p>
+</footer><script>
+
+const movieNames = [
+"Howard the Duck",
+"The Punisher",
+"Captain America",
+"The Fantastic Four (unreleased)",
+"Blade",
+"Nick Fury: Agent of S.H.I.E.L.D.",
+"X-Men",
+"Blade II",
+"Spider-Man",
+"Daredevil",
+"X2",
+"The Punisher",
+"Spider-Man 2",
+"Blade: Trinity",
+"Elektra",
+"Fantastic Four",
+"X-Men: The Last Stand",
+"Ghost Rider",
+"Spider-Man 3",
+"Fantastic Four: Rise of the Silver Surfer",
+"Iron Man",
+"The Incredible Hulk",
+"Punisher: War Zone",
+"X-Men Origins: Wolverine",
+"Iron Man 2",
+"Thor",
+"Captain America: The First Avenger",
+"X-Men: First Class",
+"Ghost Rider: Spirit of Vengeance",
+"The Avengers",
+"The Amazing Spider-Man",
+"Iron Man 3",
+"Thor: The Dark World",
+"The Wolverine",
+"Captain America: The Winter Soldier",
+"Guardians of the Galaxy",
+"The Amazing Spider-Man 2",
+"X-Men: Days of Future Past",
+"Avengers: Age of Ultron",
+"Ant-Man",
+"Fantastic Four",
+"Captain America: Civil War",
+"Doctor Strange",
+"Deadpool",
+"X-Men: Apocalypse",
+"Guardians of the Galaxy Vol. 2",
+"Spider-Man: Homecoming",
+"Thor: Ragnarok",
+"Logan",
+"Black Panther",
+"Avengers: Infinity War",
+"Deadpool 2",
+"Ant-Man and the Wasp",
+"Venom",
+"Captain Marvel",
+"Avengers: Endgame",
+"Spider-Man: Far From Home",
+"Dark Phoenix",
+"The New Mutants",
+"Black Widow",
+"Shang-Chi and the Legend of the Ten Rings",
+"Eternals",
+"Spider-Man: No Way Home",
+"Venom: Let There Be Carnage",
+"Doctor Strange in the Multiverse of Madness",
+"Morbius",
+"Thor: Love and Thunder",
+"Black Panther: Wakanda Forever",
+"Ant-Man and the Wasp: Quantumania",
+"Guardians of the Galaxy Vol. 3",
+"The Marvels",
+"Madame Web",
+"Deadpool & Wolverine",
+"Kraven the Hunter",
+"Venom: The Last Dance",
+"Captain America: Brave New World",
+"Thunderbolts*",
+"The Fantastic Four: First Steps",
+"Spider-Man: Brand New Day",
+"Avengers: Doomsday",
+"Avengers: Secret Wars"
+];
+
+let movies = movieNames.map((name, index) => ({
+    id: index,
+    name: name,
+    watched: false
+}));
+
+// Load saved movies
+const saved = JSON.parse(localStorage.getItem("marvelWatchlist"));
+
+if (Array.isArray(saved)) {
+    movies.forEach(movie => {
+        movie.watched = saved.includes(movie.id);
+    });
+}
+
+let currentFilter = "all";
+
+function saveMovies() {
+
+    const watched = movies
+        .filter(movie => movie.watched)
+        .map(movie => movie.id);
+
+    localStorage.setItem(
+        "marvelWatchlist",
+        JSON.stringify(watched)
+    );
+}
+
+function setFilter(filter, button) {
+
+    currentFilter = filter;
+
+    document.querySelectorAll(".filters button")
+        .forEach(btn => btn.classList.remove("active"));
+
+    button.classList.add("active");
+
+    displayMovies();
+}
+
+function toggleMovie(id) {
+
+    movies[id].watched = !movies[id].watched;
+
+    saveMovies();
+    displayMovies();
+}
+
+function displayMovies() {
+
+    const list = document.getElementById("movieList");
+    const search = document.getElementById("search")
+        .value.toLowerCase();
+
+    list.innerHTML = "";
+
+    const filtered = movies.filter(movie => {
+
+        const matchSearch =
+            movie.name.toLowerCase().includes(search);
+
+        const matchFilter =
+            currentFilter === "all" ||
+            (currentFilter === "watched" && movie.watched) ||
+            (currentFilter === "unwatched" && !movie.watched);
+
+        return matchSearch && matchFilter;
+    });
+
+    filtered.forEach(movie => {
+
+        const div = document.createElement("div");
+        div.className = "movie" +
+            (movie.watched ? " watched" : "");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = movie.watched;
+
+        checkbox.onchange = () => toggleMovie(movie.id);
+
+        const span = document.createElement("span");
+        span.textContent = movie.name;
+
+        const status = document.createElement("small");
+        status.textContent = movie.watched ? "Watched" : "Pending";
+
+        div.append(checkbox, span, status);
+        list.appendChild(div);
+    });
+
+    updateStats();
+}
+
+function updateStats() {
+
+    const total = movies.length;
+
+    const watched = movies.filter(
+        movie => movie.watched
+    ).length;
+
+    const remaining = total - watched;
+
+    const percentage = Math.round(
+        (watched / total) * 100
+    );
+
+    document.getElementById("total").textContent = total;
+    document.getElementById("watched").textContent = watched;
+    document.getElementById("remaining").textContent = remaining;
+
+    document.getElementById("percentage").textContent =
+        percentage + "%";
+
+    document.getElementById("progressBar").style.width =
+        percentage + "%";
+}
+
+document.getElementById("search")
+    .addEventListener("input", displayMovies);
+
+displayMovies();
+
+</script></body>
+</html>
