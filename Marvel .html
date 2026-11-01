@@ -1,0 +1,680 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MARVELVERSE | Movie Tracker</title><style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #090909;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background: #111;
+    padding: 20px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.logo span {
+    color: #e50920;
+}
+
+nav {
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+nav a:hover {
+    color: #e50920;
+}
+
+.hero {
+    min-height: 390px;
+    padding: 90px 7%;
+    background:
+    linear-gradient(90deg, #080808 15%, transparent),
+    linear-gradient(0deg, #090909, transparent),
+    url("https://image.tmdb.org/t/p/original/7RyHsO4yDXtBv1zUU3mTpHeQ0d5.jpg");
+
+    background-size: cover;
+    background-position: center;
+}
+
+.hero h1 {
+    font-size: 48px;
+    max-width: 550px;
+    margin-bottom: 15px;
+}
+
+.hero h1 span {
+    color: #e50920;
+}
+
+.hero p {
+    color: #ccc;
+    line-height: 1.7;
+    max-width: 500px;
+}
+
+.hero button {
+    margin-top: 22px;
+    padding: 13px 25px;
+    background: #e50920;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.container {
+    padding: 25px 7%;
+}
+
+.section-title {
+    font-size: 23px;
+    margin-bottom: 20px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: #181818;
+    padding: 22px;
+    border-radius: 10px;
+    border: 1px solid #292929;
+}
+
+.stat-card h2 {
+    color: #e50920;
+    font-size: 30px;
+}
+
+.stat-card p {
+    color: #aaa;
+    margin-top: 7px;
+    font-size: 13px;
+}
+
+.progress {
+    background: #292929;
+    height: 10px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+#progressBar {
+    width: 0%;
+    height: 100%;
+    background: #e50920;
+    transition: .4s;
+}
+
+.search {
+    width: 100%;
+    padding: 15px;
+    background: #191919;
+    border: 1px solid #333;
+    color: white;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    outline: none;
+}
+
+.filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.filters button {
+    background: #222;
+    border: 1px solid #333;
+    color: white;
+    padding: 11px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.filters button.active,
+.filters button:hover {
+    background: #e50920;
+    border-color: #e50920;
+}
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+}
+
+.movie-card {
+    background: #181818;
+    border-radius: 9px;
+    overflow: hidden;
+    position: relative;
+    transition: .3s;
+}
+
+.movie-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 8px 25px #000;
+}
+
+.poster {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    background: #222;
+}
+
+.movie-info {
+    padding: 12px;
+}
+
+.movie-info h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+    min-height: 34px;
+}
+
+.movie-info p {
+    font-size: 12px;
+    color: #aaa;
+    margin-bottom: 10px;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
+
+.watch-btn {
+    background: #333;
+    border: none;
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.watch-btn.done {
+    background: #176b36;
+}
+
+.fav-btn {
+    background: transparent;
+    color: #aaa;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.fav-btn.active {
+    color: #ffcc00;
+}
+
+.movie-card.watched {
+    opacity: .75;
+}
+
+.empty {
+    text-align: center;
+    padding: 40px;
+    color: #aaa;
+    grid-column: 1/-1;
+}
+
+footer {
+    background: #111;
+    text-align: center;
+    padding: 35px;
+    margin-top: 40px;
+    color: #888;
+}
+
+footer strong {
+    color: #e50920;
+}
+
+@media(max-width:900px) {
+    .movie-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media(max-width:600px) {
+
+    header {
+        padding: 18px;
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+    nav {
+        gap: 10px;
+    }
+
+    nav a {
+        font-size: 11px;
+    }
+
+    .hero {
+        padding: 65px 20px;
+        min-height: 330px;
+    }
+
+    .hero h1 {
+        font-size: 35px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .movie-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+}
+
+</style></head><body><header><div class="logo">MARVEL<span>VERSE</span></div>
+
+<nav>
+    <a href="#home">Home</a>
+    <a href="#dashboard">My Progress</a>
+    <a href="#movies">Movies</a>
+</nav>
+
+</header><section class="hero" id="home"><h1>ENTER THE <span>MARVEL</span> UNIVERSE</h1>
+
+<p>
+    Explore legendary heroes, unforgettable stories
+    and every Marvel movie. Track your journey
+    and complete your ultimate watchlist.
+</p>
+
+<button onclick="document.getElementById('movies').scrollIntoView({behavior:'smooth'})">
+    EXPLORE MOVIES
+</button>
+
+</section><div class="container" id="dashboard"><h2 class="section-title">MY DASHBOARD</h2>
+
+<div class="stats">
+
+    <div class="stat-card">
+        <h2 id="total">0</h2>
+        <p>TOTAL MOVIES</p>
+    </div>
+
+    <div class="stat-card">
+        <h2 id="watched">0</h2>
+        <p>WATCHED</p>
+    </div>
+
+    <div class="stat-card">
+        <h2 id="remaining">0</h2>
+        <p>REMAINING</p>
+    </div>
+
+    <div class="stat-card">
+        <h2 id="percent">0%</h2>
+        <p>COMPLETION</p>
+    </div>
+
+</div>
+
+<div class="progress">
+    <div id="progressBar"></div>
+</div>
+
+</div><div class="container" id="movies"><h2 class="section-title">MOVIE COLLECTION 🎬</h2>
+
+<input
+    class="search"
+    type="text"
+    id="search"
+    placeholder="Search your favourite Marvel movie..."
+>
+
+<div class="filters">
+
+    <button class="active" onclick="setFilter('all',this)">ALL</button>
+
+    <button onclick="setFilter('watched',this)">WATCHED</button>
+
+    <button onclick="setFilter('unwatched',this)">UNWATCHED</button>
+
+    <button onclick="setFilter('favourites',this)">⭐ FAVOURITES</button>
+
+</div>
+
+<div class="movie-grid" id="movieGrid"></div>
+
+</div><footer><h2>MARVEL<strong>VERSE</strong></h2>
+
+<p>EVERY HERO. EVERY STORY. EVERY JOURNEY.</p>
+
+<p style="margin-top:12px">Unofficial Fan-Made Movie Tracker</p>
+
+</footer><script>
+
+const movieNames = [
+
+"Howard the Duck",
+"The Punisher",
+"Captain America",
+"The Fantastic Four (unreleased)",
+"Blade",
+"Nick Fury: Agent of S.H.I.E.L.D.",
+"X-Men",
+"Blade II",
+"Spider-Man",
+"Daredevil",
+"X2",
+"The Punisher",
+"Spider-Man 2",
+"Blade: Trinity",
+"Elektra",
+"Fantastic Four",
+"X-Men: The Last Stand",
+"Ghost Rider",
+"Spider-Man 3",
+"Fantastic Four: Rise of the Silver Surfer",
+"Iron Man",
+"The Incredible Hulk",
+"Punisher: War Zone",
+"X-Men Origins: Wolverine",
+"Iron Man 2",
+"Thor",
+"Captain America: The First Avenger",
+"X-Men: First Class",
+"Ghost Rider: Spirit of Vengeance",
+"The Avengers",
+"The Amazing Spider-Man",
+"Iron Man 3",
+"Thor: The Dark World",
+"The Wolverine",
+"Captain America: The Winter Soldier",
+"Guardians of the Galaxy",
+"The Amazing Spider-Man 2",
+"X-Men: Days of Future Past",
+"Avengers: Age of Ultron",
+"Ant-Man",
+"Fantastic Four",
+"Captain America: Civil War",
+"Doctor Strange",
+"Deadpool",
+"X-Men: Apocalypse",
+"Guardians of the Galaxy Vol. 2",
+"Spider-Man: Homecoming",
+"Thor: Ragnarok",
+"Logan",
+"Black Panther",
+"Avengers: Infinity War",
+"Deadpool 2",
+"Ant-Man and the Wasp",
+"Venom",
+"Captain Marvel",
+"Avengers: Endgame",
+"Spider-Man: Far From Home",
+"Dark Phoenix",
+"The New Mutants",
+"Black Widow",
+"Shang-Chi and the Legend of the Ten Rings",
+"Eternals",
+"Spider-Man: No Way Home",
+"Venom: Let There Be Carnage",
+"Doctor Strange in the Multiverse of Madness",
+"Morbius",
+"Thor: Love and Thunder",
+"Black Panther: Wakanda Forever",
+"Ant-Man and the Wasp: Quantumania",
+"Guardians of the Galaxy Vol. 3",
+"The Marvels",
+"Madame Web",
+"Deadpool & Wolverine",
+"Kraven the Hunter",
+"Venom: The Last Dance",
+"Captain America: Brave New World",
+"Thunderbolts*",
+"The Fantastic Four: First Steps",
+"Spider-Man: Brand New Day",
+"Avengers: Doomsday",
+"Avengers: Secret Wars"
+
+];
+
+// Approximate release years for movie display
+const years = [
+1986,1989,1990,1994,1998,1998,2000,2002,2002,2003,
+2003,2004,2004,2004,2005,2005,2006,2007,2007,2007,
+2008,2008,2008,2009,2010,2011,2011,2011,2011,2012,
+2012,2013,2013,2013,2014,2014,2014,2014,2015,2015,
+2015,2016,2016,2016,2016,2017,2017,2017,2017,2018,
+2018,2018,2018,2018,2019,2019,2019,2019,2020,2021,
+2021,2021,2021,2021,2022,2022,2022,2022,2022,2023,
+2023,2023,2024,2024,2024,2025,2025,2025,2026,2026,
+2026,2027
+];
+
+let saved = JSON.parse(localStorage.getItem("marvelverseData")) || {};
+
+let movies = movieNames.map((name,index) => ({
+    id: index,
+    name,
+    year: years[index] || "TBA",
+    watched: saved[index]?.watched || false,
+    favourite: saved[index]?.favourite || false
+}));
+
+let currentFilter = "all";
+
+function saveData() {
+
+    let data = {};
+
+    movies.forEach(movie => {
+
+        data[movie.id] = {
+            watched: movie.watched,
+            favourite: movie.favourite
+        };
+
+    });
+
+    localStorage.setItem("marvelverseData",JSON.stringify(data));
+}
+
+function setFilter(filter,button) {
+
+    currentFilter = filter;
+
+    document.querySelectorAll(".filters button")
+    .forEach(btn => btn.classList.remove("active"));
+
+    button.classList.add("active");
+
+    displayMovies();
+}
+
+function toggleWatched(id) {
+
+    movies[id].watched = !movies[id].watched;
+
+    saveData();
+    displayMovies();
+}
+
+function toggleFavourite(id) {
+
+    movies[id].favourite = !movies[id].favourite;
+
+    saveData();
+    displayMovies();
+}
+
+function displayMovies() {
+
+    const grid = document.getElementById("movieGrid");
+
+    const search = document.getElementById("search")
+    .value.toLowerCase();
+
+    grid.innerHTML = "";
+
+    const filtered = movies.filter(movie => {
+
+        const matchSearch =
+        movie.name.toLowerCase().includes(search);
+
+        const matchFilter =
+        currentFilter === "all" ||
+        (currentFilter === "watched" && movie.watched) ||
+        (currentFilter === "unwatched" && !movie.watched) ||
+        (currentFilter === "favourites" && movie.favourite);
+
+        return matchSearch && matchFilter;
+
+    });
+
+    if(filtered.length === 0) {
+
+        grid.innerHTML = '<div class="empty">No movies found.</div>';
+    }
+
+    filtered.forEach(movie => {
+
+        const posterURL =
+        `https://image.tmdb.org/t/p/w500${getPoster(movie.name)}`;
+
+        const card = document.createElement("div");
+
+        card.className = "movie-card" +
+        (movie.watched ? " watched" : "");
+
+        const poster = document.createElement("img");
+        poster.className = "poster";
+        poster.src = posterURL;
+        poster.alt = movie.name;
+        poster.loading = "lazy";
+        poster.onerror = () => {
+            poster.src = "https://placehold.co/300x450/222/fff?text=Marvel+Movie";
+        };
+
+        const info = document.createElement("div");
+        info.className = "movie-info";
+
+        const title = document.createElement("h3");
+        title.textContent = movie.name;
+
+        const year = document.createElement("p");
+        year.textContent = movie.year;
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const watch = document.createElement("button");
+        watch.className = "watch-btn" +
+        (movie.watched ? " done" : "");
+
+        watch.textContent = movie.watched ? "✓ WATCHED" : "+ WATCH";
+
+        watch.onclick = () => toggleWatched(movie.id);
+
+        const fav = document.createElement("button");
+        fav.className = "fav-btn" +
+        (movie.favourite ? " active" : "");
+
+        fav.textContent = movie.favourite ? "★" : "☆";
+
+        fav.onclick = () => toggleFavourite(movie.id);
+
+        actions.append(watch,fav);
+
+        info.append(title,year,actions);
+
+        card.append(poster,info);
+
+        grid.appendChild(card);
+
+    });
+
+    updateDashboard();
+}
+
+function getPoster(name) {
+
+    // TMDB poster paths can be added here later.
+    return "";
+}
+
+function updateDashboard() {
+
+    const total = movies.length;
+
+    const watched = movies.filter(m => m.watched).length;
+
+    const remaining = total - watched;
+
+    const percent = total
+    ? Math.round(watched / total * 100)
+    : 0;
+
+    document.getElementById("total").textContent = total;
+
+    document.getElementById("watched").textContent = watched;
+
+    document.getElementById("remaining").textContent = remaining;
+
+    document.getElementById("percent").textContent = percent + "%";
+
+    document.getElementById("progressBar").style.width =
+    percent + "%";
+
+}
+
+document.getElementById("search")
+.addEventListener("input",displayMovies);
+
+displayMovies();
+
+</script></body>
+</html>
